@@ -35,6 +35,7 @@ are implemented in C via cython to reach a competitive performance (factor
 Summary:        Documentation and examples for %{name}
 BuildRequires:  python3-sphinx
 Requires:       (python-matplotlib or python3-matplotlib)
+BuildArch:      noarch
 
 %description doc
 Documentation and examples for %{name}.
