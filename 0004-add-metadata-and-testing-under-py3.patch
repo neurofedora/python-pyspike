@@ -1,0 +1,44 @@
+From f73a5f17a976b341c47562231ca9f7d9c24b4963 Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Date: Sun, 13 Dec 2015 11:04:33 +0100
+Subject: [PATCH 4/5] add metadata and testing under py3
+
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+---
+ .travis.yml | 3 +++
+ setup.py    | 5 +++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/.travis.yml b/.travis.yml
+index 1035775..1562d21 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -2,6 +2,9 @@ language: python
+ python:
+  - "2.6"
+  - "2.7"
++ - "3.3"
++ - "3.4"
++ - "3.5"
+ env:
+  - CYTHON_INSTALL="pip install -q cython"
+  - CYTHON_INSTALL=""
+diff --git a/setup.py b/setup.py
+index d853cdf..8bc3c70 100644
+--- a/setup.py
++++ b/setup.py
+@@ -78,6 +78,11 @@ train similarity',
+         'Programming Language :: Python :: 2',
+         'Programming Language :: Python :: 2.6',
+         'Programming Language :: Python :: 2.7',
++
++        'Programming Language :: Python :: 3',
++        'Programming Language :: Python :: 3.3',
++        'Programming Language :: Python :: 3.4',
++        'Programming Language :: Python :: 3.5',
+     ],
+     package_data={
+         'pyspike': ['cython/cython_add.c', 'cython/cython_profiles.c',
+-- 
+2.6.4
+

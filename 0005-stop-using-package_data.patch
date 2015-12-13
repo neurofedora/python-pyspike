@@ -1,0 +1,43 @@
+From 9e330db9898c5637a41a475bdc13ee84d7cd73e6 Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Date: Sun, 13 Dec 2015 11:17:37 +0100
+Subject: [PATCH 5/5] stop using package_data
+
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+---
+ MANIFEST.in | 6 ++++++
+ setup.py    | 7 +------
+ 2 files changed, 7 insertions(+), 6 deletions(-)
+ create mode 100644 MANIFEST.in
+
+diff --git a/MANIFEST.in b/MANIFEST.in
+new file mode 100644
+index 0000000..67177c8
+--- /dev/null
++++ b/MANIFEST.in
+@@ -0,0 +1,6 @@
++include *.rst
++include *.txt
++include pyspike/cython/*.c
++recursive-include examples *.py *.txt
++recursive-include test *.py *.txt
++recursive-include doc *
+diff --git a/setup.py b/setup.py
+index 8bc3c70..9257707 100644
+--- a/setup.py
++++ b/setup.py
+@@ -83,10 +83,5 @@ train similarity',
+         'Programming Language :: Python :: 3.3',
+         'Programming Language :: Python :: 3.4',
+         'Programming Language :: Python :: 3.5',
+-    ],
+-    package_data={
+-        'pyspike': ['cython/cython_add.c', 'cython/cython_profiles.c',
+-                    'cython_distances.c'],
+-        'test': ['Spike_testdata.txt']
+-    }
++    ]
+ )
+-- 
+2.6.4
+

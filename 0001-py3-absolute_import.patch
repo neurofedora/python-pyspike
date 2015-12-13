@@ -1,0 +1,274 @@
+From 35f4715e8531fea30fd7c89c1a7c57c5ef02bbf0 Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Date: Sun, 13 Dec 2015 10:55:30 +0100
+Subject: [PATCH 1/5] py3: absolute_import
+
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+---
+ pyspike/DiscreteFunc.py       |  6 +++---
+ pyspike/PieceWiseConstFunc.py |  6 +++---
+ pyspike/PieceWiseLinFunc.py   |  8 ++++----
+ pyspike/__init__.py           | 20 +++++++++++---------
+ pyspike/isi_distance.py       |  8 +++++---
+ pyspike/spike_distance.py     |  8 +++++---
+ pyspike/spike_sync.py         |  8 +++++---
+ 7 files changed, 36 insertions(+), 28 deletions(-)
+
+diff --git a/pyspike/DiscreteFunc.py b/pyspike/DiscreteFunc.py
+index 17153ee..766ece7 100644
+--- a/pyspike/DiscreteFunc.py
++++ b/pyspike/DiscreteFunc.py
+@@ -2,7 +2,7 @@
+ # Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ # Distributed under the BSD License
+ 
+-from __future__ import print_function
++from __future__ import absolute_import, print_function
+ 
+ import numpy as np
+ import collections
+@@ -199,7 +199,7 @@ class DiscreteFunc(object):
+ 
+         # cython version
+         try:
+-            from cython.cython_add import add_discrete_function_cython as \
++            from .cython.cython_add import add_discrete_function_cython as \
+                 add_discrete_function_impl
+         except ImportError:
+             print("Warning: add_discrete_function_cython not found. Make \
+@@ -207,7 +207,7 @@ sure that PySpike is installed by running\n\
+ 'python setup.py build_ext --inplace'! \
+ \n Falling back to slow python backend.")
+             # use python backend
+-            from cython.python_backend import add_discrete_function_python as \
++            from .cython.python_backend import add_discrete_function_python as \
+                 add_discrete_function_impl
+ 
+         self.x, self.y, self.mp = \
+diff --git a/pyspike/PieceWiseConstFunc.py b/pyspike/PieceWiseConstFunc.py
+index 2705443..94ddc9e 100644
+--- a/pyspike/PieceWiseConstFunc.py
++++ b/pyspike/PieceWiseConstFunc.py
+@@ -2,7 +2,7 @@
+ # Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ # Distributed under the BSD License
+ 
+-from __future__ import print_function
++from __future__ import absolute_import, print_function
+ 
+ import numpy as np
+ import collections
+@@ -188,14 +188,14 @@ class PieceWiseConstFunc(object):
+ 
+         # cython version
+         try:
+-            from cython.cython_add import add_piece_wise_const_cython as \
++            from .cython.cython_add import add_piece_wise_const_cython as \
+                 add_piece_wise_const_impl
+         except ImportError:
+             print("Warning: add_piece_wise_const_cython not found. Make sure \
+ that PySpike is installed by running\n 'python setup.py build_ext --inplace'! \
+ \n Falling back to slow python backend.")
+             # use python backend
+-            from cython.python_backend import add_piece_wise_const_python as \
++            from .cython.python_backend import add_piece_wise_const_python as \
+                 add_piece_wise_const_impl
+ 
+         self.x, self.y = add_piece_wise_const_impl(self.x, self.y, f.x, f.y)
+diff --git a/pyspike/PieceWiseLinFunc.py b/pyspike/PieceWiseLinFunc.py
+index c0dd475..2c01bf4 100644
+--- a/pyspike/PieceWiseLinFunc.py
++++ b/pyspike/PieceWiseLinFunc.py
+@@ -2,7 +2,7 @@
+ # Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ # Distributed under the BSD License
+ 
+-from __future__ import print_function
++from __future__ import absolute_import, print_function
+ 
+ import numpy as np
+ import collections
+@@ -221,20 +221,20 @@ class PieceWiseLinFunc:
+         assert self.x[-1] == f.x[-1], "The functions have different intervals"
+ 
+         # python implementation
+-        # from python_backend import add_piece_wise_lin_python
++        # from .python_backend import add_piece_wise_lin_python
+         # self.x, self.y1, self.y2 = add_piece_wise_lin_python(
+         #     self.x, self.y1, self.y2, f.x, f.y1, f.y2)
+ 
+         # cython version
+         try:
+-            from cython.cython_add import add_piece_wise_lin_cython as \
++            from .cython.cython_add import add_piece_wise_lin_cython as \
+                 add_piece_wise_lin_impl
+         except ImportError:
+             print("Warning: add_piece_wise_lin_cython not found. Make sure \
+ that PySpike is installed by running\n 'python setup.py build_ext --inplace'! \
+ \n Falling back to slow python backend.")
+             # use python backend
+-            from cython.python_backend import add_piece_wise_lin_python as \
++            from .cython.python_backend import add_piece_wise_lin_python as \
+                 add_piece_wise_lin_impl
+ 
+         self.x, self.y1, self.y2 = add_piece_wise_lin_impl(
+diff --git a/pyspike/__init__.py b/pyspike/__init__.py
+index 3e836bd..56666a7 100644
+--- a/pyspike/__init__.py
++++ b/pyspike/__init__.py
+@@ -4,24 +4,26 @@ Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ Distributed under the BSD License
+ """
+ 
++from __future__ import absolute_import
++
+ __all__ = ["isi_distance", "spike_distance", "spike_sync", "psth",
+            "spikes", "SpikeTrain", "PieceWiseConstFunc", "PieceWiseLinFunc",
+            "DiscreteFunc"]
+ 
+-from PieceWiseConstFunc import PieceWiseConstFunc
+-from PieceWiseLinFunc import PieceWiseLinFunc
+-from DiscreteFunc import DiscreteFunc
+-from SpikeTrain import SpikeTrain
++from .PieceWiseConstFunc import PieceWiseConstFunc
++from .PieceWiseLinFunc import PieceWiseLinFunc
++from .DiscreteFunc import DiscreteFunc
++from .SpikeTrain import SpikeTrain
+ 
+-from isi_distance import isi_profile, isi_distance, isi_profile_multi,\
++from .isi_distance import isi_profile, isi_distance, isi_profile_multi,\
+     isi_distance_multi, isi_distance_matrix
+-from spike_distance import spike_profile, spike_distance, spike_profile_multi,\
++from .spike_distance import spike_profile, spike_distance, spike_profile_multi,\
+     spike_distance_multi, spike_distance_matrix
+-from spike_sync import spike_sync_profile, spike_sync,\
++from .spike_sync import spike_sync_profile, spike_sync,\
+     spike_sync_profile_multi, spike_sync_multi, spike_sync_matrix
+-from psth import psth
++from .psth import psth
+ 
+-from spikes import load_spike_trains_from_txt, spike_train_from_string, \
++from .spikes import load_spike_trains_from_txt, spike_train_from_string, \
+     merge_spike_trains, generate_poisson_spikes
+ 
+ 
+diff --git a/pyspike/isi_distance.py b/pyspike/isi_distance.py
+index 5ea555d..0019995 100644
+--- a/pyspike/isi_distance.py
++++ b/pyspike/isi_distance.py
+@@ -2,6 +2,8 @@
+ # Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ # Distributed under the BSD License
+ 
++from __future__ import absolute_import
++
+ from pyspike import PieceWiseConstFunc
+ from pyspike.generic import _generic_profile_multi, _generic_distance_multi, \
+     _generic_distance_matrix
+@@ -31,14 +33,14 @@ def isi_profile(spike_train1, spike_train2):
+ 
+     # load cython implementation
+     try:
+-        from cython.cython_profiles import isi_profile_cython \
++        from .cython.cython_profiles import isi_profile_cython \
+             as isi_profile_impl
+     except ImportError:
+         print("Warning: isi_distance_cython not found. Make sure that PySpike \
+ is installed by running\n 'python setup.py build_ext --inplace'!\n \
+ Falling back to slow python backend.")
+         # use python backend
+-        from cython.python_backend import isi_distance_python \
++        from .cython.python_backend import isi_distance_python \
+             as isi_profile_impl
+ 
+     times, values = isi_profile_impl(spike_train1.get_spikes_non_empty(),
+@@ -72,7 +74,7 @@ def isi_distance(spike_train1, spike_train2, interval=None):
+         # distance over the whole interval is requested: use specific function
+         # for optimal performance
+         try:
+-            from cython.cython_distances import isi_distance_cython \
++            from .cython.cython_distances import isi_distance_cython \
+                 as isi_distance_impl
+ 
+             return isi_distance_impl(spike_train1.get_spikes_non_empty(),
+diff --git a/pyspike/spike_distance.py b/pyspike/spike_distance.py
+index ac2d260..265c182 100644
+--- a/pyspike/spike_distance.py
++++ b/pyspike/spike_distance.py
+@@ -2,6 +2,8 @@
+ # Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ # Distributed under the BSD License
+ 
++from __future__ import absolute_import
++
+ from pyspike import PieceWiseLinFunc
+ from pyspike.generic import _generic_profile_multi, _generic_distance_multi, \
+     _generic_distance_matrix
+@@ -31,14 +33,14 @@ def spike_profile(spike_train1, spike_train2):
+ 
+     # cython implementation
+     try:
+-        from cython.cython_profiles import spike_profile_cython \
++        from .cython.cython_profiles import spike_profile_cython \
+             as spike_profile_impl
+     except ImportError:
+         print("Warning: spike_profile_cython not found. Make sure that \
+ PySpike is installed by running\n 'python setup.py build_ext --inplace'!\n \
+ Falling back to slow python backend.")
+         # use python backend
+-        from cython.python_backend import spike_distance_python \
++        from .cython.python_backend import spike_distance_python \
+             as spike_profile_impl
+ 
+     times, y_starts, y_ends = spike_profile_impl(
+@@ -73,7 +75,7 @@ def spike_distance(spike_train1, spike_train2, interval=None):
+         # distance over the whole interval is requested: use specific function
+         # for optimal performance
+         try:
+-            from cython.cython_distances import spike_distance_cython \
++            from .cython.cython_distances import spike_distance_cython \
+                 as spike_distance_impl
+             return spike_distance_impl(spike_train1.get_spikes_non_empty(),
+                                        spike_train2.get_spikes_non_empty(),
+diff --git a/pyspike/spike_sync.py b/pyspike/spike_sync.py
+index 40d98d2..2a478bc 100644
+--- a/pyspike/spike_sync.py
++++ b/pyspike/spike_sync.py
+@@ -3,6 +3,8 @@
+ # Copyright 2014-2015, Mario Mulansky <mario.mulansky@gmx.net>
+ # Distributed under the BSD License
+ 
++from __future__ import absolute_import
++
+ import numpy as np
+ from functools import partial
+ from pyspike import DiscreteFunc
+@@ -36,14 +38,14 @@ def spike_sync_profile(spike_train1, spike_train2, max_tau=None):
+ 
+     # cython implementation
+     try:
+-        from cython.cython_profiles import coincidence_profile_cython \
++        from .cython.cython_profiles import coincidence_profile_cython \
+             as coincidence_profile_impl
+     except ImportError:
+         print("Warning: spike_distance_cython not found. Make sure that \
+ PySpike is installed by running\n 'python setup.py build_ext --inplace'!\n \
+ Falling back to slow python backend.")
+         # use python backend
+-        from cython.python_backend import coincidence_python \
++        from .cython.python_backend import coincidence_python \
+             as coincidence_profile_impl
+ 
+     if max_tau is None:
+@@ -71,7 +73,7 @@ def _spike_sync_values(spike_train1, spike_train2, interval, max_tau):
+         # distance over the whole interval is requested: use specific function
+         # for optimal performance
+         try:
+-            from cython.cython_distances import coincidence_value_cython \
++            from .cython.cython_distances import coincidence_value_cython \
+                 as coincidence_value_impl
+             if max_tau is None:
+                 max_tau = 0.0
+-- 
+2.6.4
+

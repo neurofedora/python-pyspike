@@ -1,0 +1,96 @@
+From 05cd938f54c2e26592708a11999ba53bbba68d92 Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Date: Sun, 13 Dec 2015 10:57:12 +0100
+Subject: [PATCH 2/5] py3: xrange() -> range()
+
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+---
+ examples/multivariate.py | 2 +-
+ examples/performance.py  | 2 +-
+ pyspike/DiscreteFunc.py  | 4 ++--
+ pyspike/psth.py          | 2 +-
+ test/test_distance.py    | 6 +++---
+ 5 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/examples/multivariate.py b/examples/multivariate.py
+index 53dbf0f..648e018 100644
+--- a/examples/multivariate.py
++++ b/examples/multivariate.py
+@@ -24,7 +24,7 @@ t_loading = time.clock()
+ 
+ print("Number of spike trains: %d" % len(spike_trains))
+ num_of_spikes = sum([len(spike_trains[i].spikes)
+-                     for i in xrange(len(spike_trains))])
++                     for i in range(len(spike_trains))])
+ print("Number of spikes: %d" % num_of_spikes)
+ 
+ # calculate the multivariate spike distance
+diff --git a/examples/performance.py b/examples/performance.py
+index 1c31e8f..1a53010 100644
+--- a/examples/performance.py
++++ b/examples/performance.py
+@@ -23,7 +23,7 @@ print("%d spike trains with %d spikes" % (M, int(r*T)))
+ spike_trains = []
+ 
+ t_start = datetime.now()
+-for i in xrange(M):
++for i in range(M):
+     spike_trains.append(spk.generate_poisson_spikes(r, T))
+ t_end = datetime.now()
+ runtime = (t_end-t_start).total_seconds()
+diff --git a/pyspike/DiscreteFunc.py b/pyspike/DiscreteFunc.py
+index 766ece7..bd87c9c 100644
+--- a/pyspike/DiscreteFunc.py
++++ b/pyspike/DiscreteFunc.py
+@@ -79,7 +79,7 @@ class DiscreteFunc(object):
+             expected_mp = (averaging_window_size+1) * int(self.mp[0])
+             y_plot = np.zeros_like(self.y)
+             # compute the values in a loop, could be done in cython if required
+-            for i in xrange(len(y_plot)):
++            for i in range(len(y_plot)):
+ 
+                 if self.mp[i] >= expected_mp:
+                     # the current value contains already all the wanted
+@@ -236,7 +236,7 @@ def average_profile(profiles):
+     assert len(profiles) > 1
+ 
+     avrg_profile = profiles[0].copy()
+-    for i in xrange(1, len(profiles)):
++    for i in range(1, len(profiles)):
+         avrg_profile.add(profiles[i])
+     avrg_profile.mul_scalar(1.0/len(profiles))  # normalize
+ 
+diff --git a/pyspike/psth.py b/pyspike/psth.py
+index 4027215..7cf1140 100644
+--- a/pyspike/psth.py
++++ b/pyspike/psth.py
+@@ -24,7 +24,7 @@ def psth(spike_trains, bin_size):
+ 
+     # N = len(spike_trains)
+     combined_spike_train = spike_trains[0].spikes
+-    for i in xrange(1, len(spike_trains)):
++    for i in range(1, len(spike_trains)):
+         combined_spike_train = np.append(combined_spike_train,
+                                          spike_trains[i].spikes)
+ 
+diff --git a/test/test_distance.py b/test/test_distance.py
+index e45ac16..d5bce30 100644
+--- a/test/test_distance.py
++++ b/test/test_distance.py
+@@ -309,10 +309,10 @@ def check_dist_matrix(dist_func, dist_matrix_func):
+ 
+     f_matrix = dist_matrix_func(spike_trains)
+     # check zero diagonal
+-    for i in xrange(4):
++    for i in range(4):
+         assert_equal(0.0, f_matrix[i, i])
+-    for i in xrange(4):
+-        for j in xrange(i+1, 4):
++    for i in range(4):
++        for j in range(i+1, 4):
+             assert_equal(f_matrix[i, j], f_matrix[j, i])
+     assert_equal(f12, f_matrix[1, 0])
+     assert_equal(f13, f_matrix[2, 0])
+-- 
+2.6.4
+
